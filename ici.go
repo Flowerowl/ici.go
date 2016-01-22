@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/xml"
+	"flag"
 	"fmt"
 	"github.com/fatih/color"
 	"io/ioutil"
@@ -48,17 +49,20 @@ func show(dict Dict) {
 		color.Green(ps)
 	}
 	for index, pos := range dict.Pos {
-		color.Red(pos)
-		color.Yellow(dict.Acceptation[index])
+		color.Red(strings.TrimSpace(pos))
+		color.Yellow(strings.TrimSpace(dict.Acceptation[index]))
 	}
 	for _, sent := range dict.SentList {
 		color.Blue("ex. %s", strings.TrimSpace(sent.Orig))
-		color.Cyan(strings.TrimSpace(sent.Trans))
+		color.Cyan("    %s", strings.TrimSpace(sent.Trans))
 	}
 }
 
 func main() {
-	data := get_data("what")
+	flag.Parse()
+	var words = strings.Join(flag.Args(), " ")
+
+	data := get_data(words)
 	dict := parse_xml(data)
 	show(dict)
 }
